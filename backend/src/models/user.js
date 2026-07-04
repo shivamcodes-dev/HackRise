@@ -15,7 +15,8 @@ const userSchema = new Schema(
       minLength: 3,
       maxLength: 20,
     },
-    emailid: {
+    emailId: {
+      //Shivam
       type: String,
       //filed dena compulsory
       required: true,
@@ -39,6 +40,7 @@ const userSchema = new Schema(
       type: [String],
     },
     password: {
+      type: String, //shivam
       required: true,
     },
   },
