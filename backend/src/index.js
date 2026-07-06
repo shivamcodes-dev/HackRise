@@ -4,6 +4,7 @@ require("dotenv").config();
 const main = require("./config/db");
 const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/userAuth"); //Shivam
+const redisClient = require("./config/redis");
 
 //parse:- for convting json data to js object
 app.use(express.json());
@@ -11,10 +12,26 @@ app.use(cookieParser());
 
 app.use("/user", authRouter); // Shivam
 
-main()
-  .then(async () => {
+console.log(process.env.REDIS_PASS);
+
+const InitalizeConnection = async () => {
+  try {
+    await Promise.all([main(), redisClient.connect()]);
+    console.log("DB Connected");
     app.listen(process.env.PORT, () => {
       console.log("Server listening at port Number: " + process.env.PORT);
     });
-  })
-  .catch((err) => console.log("error occure: " + err));
+  } catch (err) {
+    console.log("Error: " + err);
+  }
+};
+
+InitalizeConnection();
+
+// main()
+//   .then(async () => {
+//     app.listen(process.env.PORT, () => {
+//       console.log("Server listening at port Number: " + process.env.PORT);
+//     });
+//   })
+//   .catch((err) => console.log("error occure: " + err));
