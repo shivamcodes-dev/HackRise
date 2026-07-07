@@ -12,8 +12,6 @@ app.use(cookieParser());
 
 app.use("/user", authRouter); // Shivam
 
-console.log(process.env.REDIS_PASS);
-
 const InitalizeConnection = async () => {
   try {
     await Promise.all([main(), redisClient.connect()]);
