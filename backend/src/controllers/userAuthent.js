@@ -94,14 +94,14 @@ const adminRegister = async (req, res) => {
     req.body.password = await bcrypt.hash(password, 10);
 
     // role defult user
-    req.body.role = "admin";
+    // req.body.role = "admin";
 
     //to save the user in Db
     const user = await User.create(req.body);
 
     //jwt cookies for security
     const token = jwt.sign(
-      { _id: user._id, emailId: emailId, role: "admin" },
+      { _id: user._id, emailId: emailId, role: user.role },
       process.env.JWT_KEY,
       { expiresIn: 60 * 60 },
     );
