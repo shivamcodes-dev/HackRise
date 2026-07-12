@@ -1,4 +1,4 @@
-const getLanguageById = require("../utils/problemUtility");
+const { getLanguageById, submitBatch } = require("../utils/problemUtility");
 
 const createProblem = async (req, res) => {
   const {
@@ -21,6 +21,21 @@ const createProblem = async (req, res) => {
       //expected_Output
 
       const languageId = getLanguageById(language);
+
+      const submissions = visibleTastCases.map((testcase) => ({
+        language_id: languageId,
+        source_code: completeCode,
+        stdin: testcase.input,
+        expected_output: testcase.output,
+      }));
+
+      const submitResult = await submitBatch(submissions);
+
+      const resultToken = submitResult.map((value) => {
+        return value.token;
+      });
+
+      const testResult = submitToken(resultToken);
     }
   } catch {}
 };
