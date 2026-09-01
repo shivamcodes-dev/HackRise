@@ -1,7 +1,13 @@
 const express = require("express");
 const Problem = require("../models/problem");
 const adminMiddleware = require("../middleware/adminMiddleware");
-const createProblem = require("../controllers/userProblem");
+const {
+  createProblem,
+  updateProblem,
+  deleteProblem,
+  getProblemById,
+  getAllProblem,
+} = require("../controllers/userProblem");
 const userMiddleware = require("../middleware/userMiddleware");
 
 const problemRouter = express.Router();
