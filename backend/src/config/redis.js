@@ -5,8 +5,8 @@ const redisClient = createClient({
   username: "default",
   password: process.env.REDIS_PASSWORD,
   socket: {
-    host: "reading-wave-cabbage-26706.db.redis.io",
-    port: 15690,
+    host: "zinc-screw-simple-28347.db.redis.io",
+    port: 17255,
   },
 });
 

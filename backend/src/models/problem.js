@@ -13,7 +13,7 @@ const problemSchema = new Schema({
   },
   difficulty: {
     type: String,
-    enum: ["esay", "medium", "hard"],
+    enum: ["easy", "medium", "hard"],
     required: true,
   },
   tags: {
