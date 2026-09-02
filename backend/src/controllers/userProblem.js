@@ -41,7 +41,7 @@ const createProblem = async (req, res) => {
       });
 
       const testResult = await submitToken(resultToken);
-      console.log(testResult);
+      // console.log(testResult);
 
       for (const test of testResult) {
         if (test.status_id != 3) {
@@ -153,7 +153,9 @@ const getProblemById = async (req, res) => {
   try {
     if (!id) return res.send(400).send("ID is missing");
 
-    const getProblem = await Problem.findById(id);
+    const getProblem = await Problem.findById(id).select(
+      "_id title description difficulty tag visibleTastCases startCode",
+    );
 
     if (!getProblem) return res.status(404).send("Problem not found:)");
 
@@ -165,7 +167,9 @@ const getProblemById = async (req, res) => {
 
 const getAllProblem = async (req, res) => {
   try {
-    const getProblem = await Problem.find({});
+    const getProblem = await Problem.find({}).select(
+      "_id title difficulty tag",
+    );
 
     if (getProblem.length == 0)
       return res.status(404).send("Problem not found:)");
