@@ -39,6 +39,7 @@ const createProblem = async (req, res) => {
       const resultToken = submitResult.map((value) => {
         return value.token;
       });
+      // console.log("resultToken " + resultToken);
 
       const testResult = await submitToken(resultToken);
       // console.log(testResult);

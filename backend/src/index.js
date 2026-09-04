@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/userAuth"); //Shivam
 const redisClient = require("./config/redis");
 const problemRouter = require("./routes/problemCreator");
+const submitRouter = require("./routes/submit");
 
 //parse:- for convting json data to js object
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use(cookieParser());
 
 app.use("/user", authRouter); // Shivam
 app.use("/problem", problemRouter);
+app.use("/submission", submitRouter);
 
 const InitalizeConnection = async () => {
   try {

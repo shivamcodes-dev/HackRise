@@ -17,10 +17,11 @@ const submitCode = async (req, res) => {
       return res.status(400).send("Some field missing");
 
     const prob = await Problem.findById(problemId);
+    // console.log(prob);
 
     //judge0 ko dene se phale hi db me store kiya
 
-    const submittedResult = await Submission.create({
+    let submittedResult = await Submission.create({
       userId,
       problemId,
       code,
@@ -28,11 +29,11 @@ const submitCode = async (req, res) => {
       status: "pending",
       testCasesTotal: prob.hiddenTastCases.length,
     });
-    // {hiddenTastCases} = prob;
 
     // judge0 code ko submit karna hai with hiddentestCases
 
-    const languageId = getLanguageById;
+    const languageId = getLanguageById(language);
+    // console.log(languageId);
 
     const submissions = prob.hiddenTastCases.map((testcase) => ({
       language_id: languageId,
@@ -42,19 +43,51 @@ const submitCode = async (req, res) => {
     }));
 
     const submitResult = await submitBatch(submissions);
+    // console.log(submitResult);
 
     const resultToken = submitResult.map((value) => {
       return value.token;
     });
 
+    //update in db submittedResult after geting all info ------ submittedResult ko update kar
+
     const testResult = await submitToken(resultToken);
+    let status = "accepted";
+    let testCasesPass = 0;
+    let runTime = 0;
+    let memory = 0;
+    let errorMassage = "";
 
     for (const test of testResult) {
-      if (test.status_id != 3) {
-        return res.status(400).send("Error Occured");
+      if (test.status_id == 3) {
+        status = "accepted";
+        testCasesPass++;
+        runTime = runTime + parseFloat(test.time);
+        memory = Math.max(memory, test.memory);
+      } else {
+        if (test.status_id == 4) {
+          status = "error";
+          errorMassage = test.stderr;
+        } else {
+          status = "wrong";
+          errorMassage = test.stderr;
+        }
       }
     }
-  } catch (err) {}
+
+    //store in db
+    submittedResult.status = status;
+    submittedResult.runtime = runTime;
+    submittedResult.memory = memory;
+    submittedResult.errorMassage = errorMassage;
+    submittedResult.tastCasesPassed = testCasesPass;
+
+    await submittedResult.save();
+
+    res.status(201).send(submittedResult);
+  } catch (err) {
+    res.status(500).send("internal server error " + err);
+  }
 };
 
 module.exports = submitCode;
