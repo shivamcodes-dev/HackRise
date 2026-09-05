@@ -23,6 +23,10 @@ HackRise is a full-stack coding practice platform built for students to solve co
 - JWT
 - bcrypt
 
+### Testing
+
+- API endpoints tested using Postman
+
 ## 📁 Project Structure
 
 ```

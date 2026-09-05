@@ -7,6 +7,7 @@ const {
   deleteProblem,
   getProblemById,
   getAllProblem,
+  solvedAllProblembyUser,
 } = require("../controllers/userProblem");
 const userMiddleware = require("../middleware/userMiddleware");
 
@@ -20,11 +21,11 @@ problemRouter.delete("/delete/:id", adminMiddleware, deleteProblem);
 //fetch
 problemRouter.get("/problemById/:id", userMiddleware, getProblemById);
 problemRouter.get("/getAllProblem", userMiddleware, getAllProblem);
-// problemRouter.get(
-//   "/problemSolveByuser",
-//   userMiddleware,
-//   solvedAllProblembyUser,
-// );
+problemRouter.get(
+  "/problemSolveByuser",
+  userMiddleware,
+  solvedAllProblembyUser,
+);
 
 //update
 

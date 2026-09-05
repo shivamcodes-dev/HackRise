@@ -3,6 +3,7 @@ const {
   submitBatch,
   submitToken,
 } = require("../utils/problemUtility");
+
 const Problem = require("../models/problem");
 const createProblem = async (req, res) => {
   const {
@@ -180,10 +181,20 @@ const getAllProblem = async (req, res) => {
     res.status(500).send("Error " + err);
   }
 };
+
+const solvedAllProblembyUser = async (req, res) => {
+  try {
+    const solProb = req.result.problemSolved.length;
+    res.status(200).send(solProb);
+  } catch {
+    res.status(500).send("server error");
+  }
+};
 module.exports = {
   createProblem,
   updateProblem,
   deleteProblem,
   getProblemById,
   getAllProblem,
+  solvedAllProblembyUser,
 };
