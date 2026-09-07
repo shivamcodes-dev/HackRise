@@ -6,6 +6,7 @@ const {
   login,
   logout,
   adminRegister,
+  deleteProfile,
 } = require("../controllers/userAuthent"); //
 const userMiddleware = require("../middleware/userMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
@@ -24,6 +25,8 @@ authRouter.post("/admin/register", adminMiddleware, adminRegister);
 
 //admin login
 authRouter.post("/admin/login", adminMiddleware, adminRegister);
+
+authRouter.delete("/profile", userMiddleware, deleteProfile);
 
 // //getprofile
 // authRouter.get("/getProfile", getProfile);
