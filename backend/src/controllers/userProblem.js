@@ -5,6 +5,7 @@ const {
 } = require("../utils/problemUtility");
 
 const Problem = require("../models/problem");
+const Submission = require("../models/submisson");
 const createProblem = async (req, res) => {
   const {
     title,
@@ -190,6 +191,22 @@ const solvedAllProblembyUser = async (req, res) => {
     res.status(500).send("server error");
   }
 };
+
+const submittedProblem = async (req, res) => {
+  try {
+    const userId = req.result._id;
+    const problemId = req.params.pid;
+
+    const ansSubmission = await Submission.find({ userId, problemId });
+
+    if (ansSubmission.length == 0)
+      res.status(200).send("No submission is Present");
+
+    res.status(200).send(ansSubmission);
+  } catch (err) {
+    res.status(500).send("Intrnal Servel Error" + err);
+  }
+};
 module.exports = {
   createProblem,
   updateProblem,
@@ -197,4 +214,5 @@ module.exports = {
   getProblemById,
   getAllProblem,
   solvedAllProblembyUser,
+  submittedProblem,
 };

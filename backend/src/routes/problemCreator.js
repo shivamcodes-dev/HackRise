@@ -8,6 +8,7 @@ const {
   getProblemById,
   getAllProblem,
   solvedAllProblembyUser,
+  submittedProblem,
 } = require("../controllers/userProblem");
 const userMiddleware = require("../middleware/userMiddleware");
 
@@ -26,6 +27,7 @@ problemRouter.get(
   userMiddleware,
   solvedAllProblembyUser,
 );
+problemRouter.get("/submittedProblem/:pid", userMiddleware, submittedProblem);
 
 //update
 

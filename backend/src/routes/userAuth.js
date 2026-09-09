@@ -27,7 +27,6 @@ authRouter.post("/admin/register", adminMiddleware, adminRegister);
 authRouter.post("/admin/login", adminMiddleware, adminRegister);
 
 authRouter.delete("/profile", userMiddleware, deleteProfile);
-
 // //getprofile
 // authRouter.get("/getProfile", getProfile);
 
