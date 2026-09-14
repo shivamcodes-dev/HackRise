@@ -7,6 +7,14 @@ const authRouter = require("./routes/userAuth"); //Shivam
 const redisClient = require("./config/redis");
 const problemRouter = require("./routes/problemCreator");
 const submitRouter = require("./routes/submit");
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: "https://localhost:5173",
+    credentials: true,
+  }),
+);
 
 //parse:- for convting json data to js object
 app.use(express.json());

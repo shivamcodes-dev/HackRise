@@ -29,9 +29,17 @@ const register = async (req, res) => {
     );
 
     res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
-    res.status(201).send("user Register successfully");
+    const reply = {
+      firstName: user.firstName,
+      emailId: user.emailId,
+      _id: user._id,
+    };
+    res.status(201).josn({
+      user: reply,
+      massage: "Register Succesfully",
+    });
   } catch (err) {
-    res.status(400).send("Error: " + err);
+    res.status(400).send("Error : " + err);
   }
 };
 
@@ -56,7 +64,15 @@ const login = async (req, res) => {
       { expiresIn: 60 * 60 },
     );
     res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
-    res.status(200).send("Logged In Successfully");
+    const reply = {
+      firstName: user.firstName,
+      emailId: user.emailId,
+      _id: user._id,
+    };
+    res.status(200).josn({
+      user: reply,
+      massage: "Login Succesfully",
+    });
   } catch (err) {
     res.status(401).send("Error: " + err);
   }

@@ -27,6 +27,19 @@ authRouter.post("/admin/register", adminMiddleware, adminRegister);
 authRouter.post("/admin/login", adminMiddleware, adminRegister);
 
 authRouter.delete("/profile", userMiddleware, deleteProfile);
+
+authRouter.get("/check", userMiddleware, (req, res) => {
+  const user = req.result;
+  const reply = {
+    firstName: user.firstName,
+    emailId: user.emailId,
+    _id: user._id,
+  };
+  res.status(200).josn({
+    user: reply,
+    massage: "Valid User",
+  });
+});
 // //getprofile
 // authRouter.get("/getProfile", getProfile);
 
