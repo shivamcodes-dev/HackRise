@@ -34,6 +34,7 @@ authRouter.get("/check", userMiddleware, (req, res) => {
     firstName: user.firstName,
     emailId: user.emailId,
     _id: user._id,
+    role: req.result.role,
   };
   res.status(200).josn({
     user: reply,

@@ -1,32 +1,28 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink } from "react-router";
 import { registerUser } from "../authSlice";
-import { useEffect, useState } from "react";
 
 const signupSchema = z.object({
-  firstName: z.string().min(3, "Name should contain at least 3 characters"),
-
-  emailId: z.string().email("Please enter a valid email"),
-
-  password: z.string().min(8, "Password should contain at least 8 characters"),
+  firstName: z.string().min(3, "Minimum character should be 3"),
+  emailId: z.string().email("Invalid Email"),
+  password: z.string().min(8, "Password is too weak"),
 });
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, loading } = useSelector((state) => state.auth);
+  const { isAuthenticated, loading } = useSelector((state) => state.auth); // Removed error as it wasn't used
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(signupSchema),
-  });
+  } = useForm({ resolver: zodResolver(signupSchema) });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -39,49 +35,47 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-base-200">
+      {" "}
+      {/* Added a light bg for contrast */}
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title justify-center text-3xl">HackRise</h2>
-
+          <h2 className="card-title justify-center text-3xl mb-6">Leetcode</h2>{" "}
+          {/* Added mb-6 for spacing */}
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* First Name */}
+            {/* First Name Field */}
             <div className="form-control">
-              <label className="label mb-1">
+              <label className="label">
                 <span className="label-text">First Name</span>
               </label>
-
               <input
                 type="text"
                 placeholder="John"
-                className={`input input-bordered ${
-                  errors.firstName ? "input-error" : ""
-                }`}
+                className={`input input-bordered w-full ${errors.firstName ? "input-error" : ""}`}
                 {...register("firstName")}
               />
-
               {errors.firstName && (
-                <span className="text-error">{errors.firstName.message}</span>
+                <span className="text-error text-sm mt-1">
+                  {errors.firstName.message}
+                </span>
               )}
             </div>
 
-            {/* Email */}
+            {/* Email Field */}
             <div className="form-control mt-4">
-              <label className="label mb-1">
+              <label className="label">
                 <span className="label-text">Email</span>
               </label>
-
               <input
                 type="email"
                 placeholder="john@example.com"
-                className={`input input-bordered ${
-                  errors.emailId ? "input-error" : ""
-                }`}
+                className={`input input-bordered w-full ${errors.emailId ? "input-error" : ""}`} // Ensure w-full for consistency
                 {...register("emailId")}
               />
-
               {errors.emailId && (
-                <span className="text-error">{errors.emailId.message}</span>
+                <span className="text-error text-sm mt-1">
+                  {errors.emailId.message}
+                </span>
               )}
             </div>
 
@@ -143,17 +137,12 @@ function Signup() {
                   )}
                 </button>
               </div>
-
               {errors.password && (
-                <span className="text-error">{errors.password.message}</span>
+                <span className="text-error text-sm mt-1">
+                  {errors.password.message}
+                </span>
               )}
             </div>
-
-            {/* Submit Button
-            <button type="submit" className="btn btn-primary w-full mt-6">
-              Sign Up
-            </button>
-          </form> */}
 
             {/* Submit Button */}
             <div className="form-control mt-8 flex justify-center">
@@ -166,7 +155,6 @@ function Signup() {
               </button>
             </div>
           </form>
-
           {/* Login Redirect */}
           <div className="text-center mt-6">
             {" "}
