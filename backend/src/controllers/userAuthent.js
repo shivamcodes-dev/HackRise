@@ -34,7 +34,7 @@ const register = async (req, res) => {
       emailId: user.emailId,
       _id: user._id,
     };
-    res.status(201).josn({
+    res.status(201).json({
       user: reply,
       massage: "Register Succesfully",
     });
@@ -69,7 +69,7 @@ const login = async (req, res) => {
       emailId: user.emailId,
       _id: user._id,
     };
-    res.status(200).josn({
+    res.status(200).json({
       user: reply,
       massage: "Login Succesfully",
     });
