@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "./authSlice";
 import { useEffect } from "react";
+import AdminPanel from "./components/AdminPanel";
 
 function App() {
   //  code likhna isAuthenticated
@@ -44,12 +45,12 @@ function App() {
           path="/admin"
           element={
             isAuthenticated && user?.role === "admin" ? (
-              <Admin />
+              <AdminPanel></AdminPanel>
             ) : (
               <Navigate to="/" />
             )
           }
-        />
+        ></Route>
       </Routes>
     </>
   );

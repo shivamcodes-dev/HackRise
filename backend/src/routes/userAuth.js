@@ -36,7 +36,7 @@ authRouter.get("/check", userMiddleware, (req, res) => {
     _id: user._id,
     role: req.result.role,
   };
-  res.status(200).josn({
+  res.status(200).json({
     user: reply,
     massage: "Valid User",
   });
