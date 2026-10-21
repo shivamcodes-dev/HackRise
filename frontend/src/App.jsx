@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "./authSlice";
 import { useEffect } from "react";
 import AdminPanel from "./components/AdminPanel";
+// import Problem from "../../backend/src/models/problem"; //error
+import ProblemPage from "./pages/ProblemPage";
 
 function App() {
   //  code likhna isAuthenticated
@@ -51,6 +53,8 @@ function App() {
             )
           }
         ></Route>
+        <Route path="/problem/:problemId" element={<ProblemPage />}></Route>
+        {/* <Route path="/problem/:problemId" element={<ProblemPage />}></Route> */}
       </Routes>
     </>
   );
