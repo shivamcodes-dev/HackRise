@@ -54,7 +54,6 @@ function App() {
           }
         ></Route>
         <Route path="/problem/:problemId" element={<ProblemPage />}></Route>
-        {/* <Route path="/problem/:problemId" element={<ProblemPage />}></Route> */}
       </Routes>
     </>
   );
