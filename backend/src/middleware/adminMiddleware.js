@@ -38,5 +38,6 @@ const adminMiddleware = async (req, res, next) => {
     res.status(401).send("Error: " + err.message);
   }
 };
+// console.log("pass adminmid");
 
 module.exports = adminMiddleware;

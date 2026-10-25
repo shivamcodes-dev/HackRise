@@ -56,6 +56,7 @@ const submitCode = async (req, res) => {
     //update in db submittedResult after geting all info ------ submittedResult ko update kar
 
     const testResult = await submitToken(resultToken);
+    console.log(testResult);
     let status = "accepted";
     let testCasesPass = 0;
     let runTime = 0;

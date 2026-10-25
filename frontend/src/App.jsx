@@ -6,14 +6,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "./authSlice";
 import { useEffect } from "react";
 import AdminPanel from "./components/AdminPanel";
-// import Problem from "../../backend/src/models/problem"; //error
 import ProblemPage from "./pages/ProblemPage";
+import Admin from "./pages/Admin";
+import AdminDelete from "./components/AdminDelete";
 
 function App() {
-  //  code likhna isAuthenticated
-  const { isAuthenticated, user, loading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const { isAuthenticated, user, loading } = useSelector((state) => state.auth);
 
+  // check initial authentication
   useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch]);
@@ -25,7 +26,6 @@ function App() {
       </div>
     );
   }
-
   return (
     <>
       <Routes>
@@ -47,7 +47,27 @@ function App() {
           path="/admin"
           element={
             isAuthenticated && user?.role === "admin" ? (
-              <AdminPanel></AdminPanel>
+              <Admin></Admin>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        ></Route>
+        <Route
+          path="/admin/create"
+          element={
+            isAuthenticated && user?.role === "admin" ? (
+              <AdminPanel />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        ></Route>
+        <Route
+          path="/admin/delete"
+          element={
+            isAuthenticated && user?.role === "admin" ? (
+              <AdminDelete />
             ) : (
               <Navigate to="/" />
             )

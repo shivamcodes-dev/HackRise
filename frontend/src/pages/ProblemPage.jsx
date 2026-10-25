@@ -3,13 +3,11 @@ import { useForm } from "react-hook-form";
 import Editor from "@monaco-editor/react";
 import { useParams } from "react-router";
 import axiosClient from "../utils/axiosClient";
-// import SubmissionHistory from "../components/SubmissionHistory";
-// import ChatAi from "../components/ChatAi";
 
 const langMap = {
-  cpp: "C++",
-  java: "Java",
-  javascript: "JavaScript",
+  cpp: "c++",
+  java: "java",
+  javascript: "javascript",
 };
 
 const ProblemPage = () => {
@@ -32,18 +30,23 @@ const ProblemPage = () => {
       try {
         const response = await axiosClient.get(
           `/problem/problemById/${problemId}`,
-        );
+        ); //problem yha hai
+
+        // console.log("+++++++++++++++++++++++++");
+        // console.log(response);
+        // // const initialCode = response.data.startCode[1].initialCode;
 
         const initialCode = response.data.startCode.find(
-          (sc) => sc.language === langMap[selectedLanguage],
+          (sc) => sc.language == langMap[selectedLanguage],
         ).initialCode;
+        // console.log(initialCode);
 
         setProblem(response.data);
 
         setCode(initialCode);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching problem:", error);
+        console.error("Error fetching problem: ", error);
         setLoading(false);
       }
     };

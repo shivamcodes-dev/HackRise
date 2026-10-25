@@ -3,6 +3,7 @@ const {
   submitBatch,
   submitToken,
 } = require("../utils/problemUtility");
+const mongoose = require("mongoose");
 
 const Problem = require("../models/problem");
 const Submission = require("../models/submisson");
@@ -154,10 +155,10 @@ const getProblemById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    if (!id) return res.send(400).send("ID is missing");
+    if (!id) return res.status(400).send("ID is missing");
 
     const getProblem = await Problem.findById(id).select(
-      "_id title description difficulty tag visibleTastCases startCode",
+      "_id title description difficulty tags visibleTastCases startCode",
     );
 
     if (!getProblem) return res.status(404).send("Problem not found:)");
