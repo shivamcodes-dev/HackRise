@@ -28,13 +28,16 @@ const createProblem = async (req, res) => {
       //expected_Output
 
       const languageId = getLanguageById(language);
-
+      console.log("Shivam");
+      console.log(visibleTastCases);
       const submissions = visibleTastCases.map((testcase) => ({
         language_id: languageId,
         source_code: completeCode,
         stdin: testcase.input,
         expected_output: testcase.output,
       }));
+      console.log("Shivam 2");
+      console.log(submissions);
 
       const submitResult = await submitBatch(submissions);
       // console.log(submitResult);
@@ -63,6 +66,7 @@ const createProblem = async (req, res) => {
 
     res.status(201).send("Problem Saved Successfully");
   } catch (err) {
+    console.error("Create Problem Error:", err.stack);
     res.status(400).send("Error: " + err);
   }
 };

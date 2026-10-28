@@ -18,7 +18,7 @@ const problemSchema = new Schema({
   },
   tags: {
     type: String,
-    enum: ["array", "linkedList", "graph", "dp"],
+    enum: ["String", "array", "linkedList", "graph", "dp", "Math"],
     required: true,
   },
   visibleTastCases: [

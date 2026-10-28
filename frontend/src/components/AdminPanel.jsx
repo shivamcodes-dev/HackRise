@@ -56,14 +56,14 @@ function AdminPanel() {
     resolver: zodResolver(problemSchema),
     defaultValues: {
       startCode: [
-        { language: "C++", initialCode: "" },
-        { language: "Java", initialCode: "" },
-        { language: "JavaScript", initialCode: "" },
+        { language: "c++", initialCode: "" },
+        { language: "java", initialCode: "" },
+        { language: "javascript", initialCode: "" },
       ],
       referenceSolution: [
-        { language: "C++", completeCode: "" },
-        { language: "Java", completeCode: "" },
-        { language: "JavaScript", completeCode: "" },
+        { language: "c++", completeCode: "" },
+        { language: "java", completeCode: "" },
+        { language: "javascript", completeCode: "" },
       ],
     },
   });
@@ -92,7 +92,9 @@ function AdminPanel() {
       alert("Problem created successfully!");
       navigate("/");
     } catch (error) {
-      alert(`Error: ${error.response?.data?.message || error.message}`);
+      console.log("Status:", error.response?.status);
+      console.log("Backend error:", error.response?.data);
+      console.log("Request payload:", error.config?.data);
     }
   };
 
@@ -158,6 +160,8 @@ function AdminPanel() {
                   <option value="linkedList">Linked List</option>
                   <option value="graph">Graph</option>
                   <option value="dp">DP</option>
+                  <option value="Math">Math</option>
+                  <option value="Tree">Tree</option>
                 </select>
               </div>
             </div>
