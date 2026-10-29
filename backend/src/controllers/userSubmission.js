@@ -96,7 +96,14 @@ const submitCode = async (req, res) => {
       await req.result.save();
     }
 
-    res.status(201).send(submittedResult);
+    const accepted = status == "accepted";
+    res.status(201).json({
+      accepted,
+      totalTestCases: submittedResult.testCasesTotal,
+      passedTestCases: testCasesPassed,
+      runtime,
+      memory,
+    });
   } catch (err) {
     res.status(500).send("internal server error " + err);
   }
@@ -114,6 +121,7 @@ const runCode = async (req, res) => {
 
     const prob = await Problem.findById(problemId);
     // console.log(prob);
+    if (language === "cpp") language = "c++";
 
     // judge0 code ko submit karna hai with hiddentestCases
 
@@ -135,7 +143,34 @@ const runCode = async (req, res) => {
     });
     const testResult = await submitToken(resultToken);
 
-    res.status(201).send(testResult);
+    let testCasesPassed = 0;
+    let runtime = 0;
+    let memory = 0;
+    let status = true;
+    let errorMessage = null;
+
+    for (const test of testResult) {
+      if (test.status_id == 3) {
+        testCasesPassed++;
+        runtime = runtime + parseFloat(test.time);
+        memory = Math.max(memory, test.memory);
+      } else {
+        if (test.status_id == 4) {
+          status = false;
+          errorMessage = test.stderr;
+        } else {
+          status = false;
+          errorMessage = test.stderr;
+        }
+      }
+    }
+
+    res.status(201).json({
+      success: status,
+      testCases: testResult,
+      runtime,
+      memory,
+    });
   } catch (err) {
     res.status(500).send("internal server error " + err);
   }

@@ -41,7 +41,7 @@ const ProblemPage = () => {
         const response = await axiosClient.get(
           `/problem/problemById/${problemId}`,
         );
-
+        console.log(response.data);
         setProblem(response.data);
       } catch (error) {
         console.error(
@@ -56,7 +56,7 @@ const ProblemPage = () => {
     fetchProblem();
   }, [problemId]);
 
-  // Set initial code whenever problem or language changes
+  // Set initial code jab bhi problem or language changes
   useEffect(() => {
     if (!problem) return;
 
@@ -65,7 +65,7 @@ const ProblemPage = () => {
     );
 
     setCode(languageCode?.initialCode || "");
-
+    // console.log(code);
     if (!languageCode) {
       console.error("Initial code not found for:", selectedLanguage);
     }
@@ -93,9 +93,15 @@ const ProblemPage = () => {
         code,
         language: selectedLanguage,
       });
+      // console.log(code);
+      // console.log(selectedLanguage);
+      console.log("Shivam");
+      console.log(response.data);
 
       setRunResult(response.data);
     } catch (error) {
+      // console.log(code);
+      // console.log(selectedLanguage);
       console.error(
         "Error running code:",
         error.response?.data || error.message,
@@ -131,23 +137,15 @@ const ProblemPage = () => {
       );
 
       setSubmitResult(response.data);
+      console.log(submitResult);
     } catch (error) {
-      console.error(
-        "Error submitting code:",
-        error.response?.data || error.message,
-      );
-
-      setSubmitResult({
-        accepted: false,
-        error:
-          error.response?.data?.message ||
-          error.response?.data?.error ||
-          error.message ||
-          "Submission failed",
+      console.error("Error running code:", error);
+      setRunResult({
+        success: false,
+        error: "Internal server error",
       });
-    } finally {
       setLoading(false);
-      setActiveRightTab("result");
+      setActiveRightTab("testcase");
     }
   };
 

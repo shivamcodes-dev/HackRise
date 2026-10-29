@@ -28,8 +28,8 @@ const createProblem = async (req, res) => {
       //expected_Output
 
       const languageId = getLanguageById(language);
-      console.log("Shivam");
-      console.log(visibleTastCases);
+      // console.log("Shivam");
+      // console.log(visibleTastCases);
       const submissions = visibleTastCases.map((testcase) => ({
         language_id: languageId,
         source_code: completeCode,
