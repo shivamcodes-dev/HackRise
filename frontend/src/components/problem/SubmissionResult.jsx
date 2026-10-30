@@ -1,4 +1,5 @@
 const SubmissionResult = ({ submitResult }) => {
+  // console.log(submitResult);
   if (!submitResult) {
     return (
       <p className="text-gray-500">Click "Submit" to evaluate your solution.</p>

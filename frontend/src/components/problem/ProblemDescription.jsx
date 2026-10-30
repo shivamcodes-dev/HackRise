@@ -12,6 +12,7 @@ const getDifficultyColor = (difficulty) => {
 };
 
 const ProblemDescription = ({ problem }) => {
+  // console.log(problem);
   return (
     <div>
       <div className="flex items-center gap-4 mb-6">
@@ -26,7 +27,9 @@ const ProblemDescription = ({ problem }) => {
             problem.difficulty?.slice(1)}
         </div>
 
-        <div className="badge badge-primary">{problem.tags}</div>
+        <div className="badge badge-primary">
+          {problem.tags?.charAt(0).toUpperCase() + problem.tags?.slice(1)}
+        </div>
       </div>
 
       <div className="whitespace-pre-wrap text-sm leading-relaxed">

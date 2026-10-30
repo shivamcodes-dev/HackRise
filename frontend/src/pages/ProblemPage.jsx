@@ -1,16 +1,19 @@
 import { useState, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
 import axiosClient from "../utils/axiosClient";
+// import SubmissionHistory from "../components/SubmissionHistory";
+// import ChatAi from "../components/ChatAi";
 
-import ProblemTabs from "../components/problem/ProblemTabs";
 import ProblemDescription from "../components/problem/ProblemDescription";
-import ProblemEditorial from "../components/problem/ProblemEditorial";
-import ProblemSolutions from "../components/problem/ProblemSolutions";
-import LanguageSelector from "../components/problem/LanguageSelector";
+import ProblemTabs from "../components/problem/ProblemTabs";
 import CodeEditor from "../components/problem/CodeEditor";
+import LanguageSelector from "../components/problem/LanguageSelector";
 import EditorActions from "../components/problem/EditorActions";
 import TestResults from "../components/problem/TestResults";
 import SubmissionResult from "../components/problem/SubmissionResult";
+import ProblemEditorial from "../components/problem/ProblemEditorial";
+import ProblemSolutions from "../components/problem/ProblemSolutions";
 
 const langMap = {
   cpp: "c++",
@@ -19,8 +22,6 @@ const langMap = {
 };
 
 const ProblemPage = () => {
-  const { problemId } = useParams();
-
   const [problem, setProblem] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [code, setCode] = useState("");
@@ -31,8 +32,9 @@ const ProblemPage = () => {
   const [activeRightTab, setActiveRightTab] = useState("code");
 
   const editorRef = useRef(null);
+  const { problemId } = useParams();
+  const { handleSubmit } = useForm();
 
-  // Fetch problem from backend
   useEffect(() => {
     const fetchProblem = async () => {
       setLoading(true);
@@ -41,14 +43,17 @@ const ProblemPage = () => {
         const response = await axiosClient.get(
           `/problem/problemById/${problemId}`,
         );
-        console.log(response.data);
+        // console.log(response);
+        const initialCode = response.data.startCode.find(
+          (sc) => sc.language === langMap[selectedLanguage],
+        ).initialCode;
+
         setProblem(response.data);
+        // console.log(problem);
+        setCode(initialCode);
+        setLoading(false);
       } catch (error) {
-        console.error(
-          "Error fetching problem:",
-          error.response?.data || error.message,
-        );
-      } finally {
+        console.error("Error fetching problem:", error);
         setLoading(false);
       }
     };
@@ -56,20 +61,15 @@ const ProblemPage = () => {
     fetchProblem();
   }, [problemId]);
 
-  // Set initial code jab bhi problem or language changes
   useEffect(() => {
-    if (!problem) return;
+    if (problem) {
+      const initialCode = problem.startCode.find(
+        (sc) => sc.language === langMap[selectedLanguage],
+      ).initialCode;
 
-    const languageCode = problem.startCode?.find(
-      (item) => item.language?.toLowerCase() === langMap[selectedLanguage],
-    );
-
-    setCode(languageCode?.initialCode || "");
-    // console.log(code);
-    if (!languageCode) {
-      console.error("Initial code not found for:", selectedLanguage);
+      setCode(initialCode);
     }
-  }, [problem, selectedLanguage]);
+  }, [selectedLanguage, problem]);
 
   const handleEditorChange = (value) => {
     setCode(value || "");
@@ -83,46 +83,35 @@ const ProblemPage = () => {
     setSelectedLanguage(language);
   };
 
-  // Run code
   const handleRun = async () => {
     setLoading(true);
     setRunResult(null);
 
     try {
+      // console.log(selectedLanguage);
       const response = await axiosClient.post(`/submission/run/${problemId}`, {
         code,
         language: selectedLanguage,
       });
-      // console.log(code);
-      // console.log(selectedLanguage);
-      console.log("Shivam");
-      console.log(response.data);
+      console.log(response);
 
       setRunResult(response.data);
+      // console.log(response);
+      setLoading(false);
+      setActiveRightTab("testcase");
     } catch (error) {
-      // console.log(code);
-      // console.log(selectedLanguage);
-      console.error(
-        "Error running code:",
-        error.response?.data || error.message,
-      );
+      console.error("Error running code:", error);
 
       setRunResult({
         success: false,
-        error:
-          error.response?.data?.message ||
-          error.response?.data?.error ||
-          error.message ||
-          "Failed to run code",
-        testCases: [],
+        error: "Internal server error Shivam",
       });
-    } finally {
+
       setLoading(false);
       setActiveRightTab("testcase");
     }
   };
 
-  // Submit code
   const handleSubmitCode = async () => {
     setLoading(true);
     setSubmitResult(null);
@@ -131,115 +120,129 @@ const ProblemPage = () => {
       const response = await axiosClient.post(
         `/submission/submit/${problemId}`,
         {
-          code,
+          code: code,
           language: selectedLanguage,
         },
       );
 
       setSubmitResult(response.data);
-      console.log(submitResult);
-    } catch (error) {
-      console.error("Error running code:", error);
-      setRunResult({
-        success: false,
-        error: "Internal server error",
-      });
       setLoading(false);
-      setActiveRightTab("testcase");
+      setActiveRightTab("result");
+    } catch (error) {
+      console.error("Error submitting code:", error);
+      setSubmitResult(null);
+      setLoading(false);
+      setActiveRightTab("result");
+    }
+  };
+
+  const getLanguageForMonaco = (lang) => {
+    switch (lang) {
+      case "javascript":
+        return "javascript";
+      case "java":
+        return "java";
+      case "cpp":
+        return "cpp";
+      default:
+        return "javascript";
+    }
+  };
+
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case "easy":
+        return "text-green-500";
+      case "medium":
+        return "text-yellow-500";
+      case "hard":
+        return "text-red-500";
+      default:
+        return "text-gray-500";
     }
   };
 
   if (loading && !problem) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <span className="loading loading-spinner loading-lg" />
-      </div>
-    );
-  }
-
-  if (!problem) {
-    return (
-      <div className="p-6 text-center">
-        Problem could not be loaded. Check the console and try again.
+        <span className="loading loading-spinner loading-lg"></span>
       </div>
     );
   }
 
   return (
     <div className="h-screen flex bg-base-100">
-      {/* Left panel */}
+      {/* Left Panel */}
       <div className="w-1/2 flex flex-col border-r border-base-300">
-        <ProblemTabs activeTab={activeLeftTab} onTabChange={setActiveLeftTab} />
+        <ProblemTabs
+          side="left"
+          activeTab={activeLeftTab}
+          onTabChange={setActiveLeftTab}
+        />
 
         <div className="flex-1 overflow-y-auto p-6">
-          {activeLeftTab === "description" && (
-            <ProblemDescription problem={problem} />
-          )}
+          {problem && (
+            <>
+              {activeLeftTab === "description" && (
+                <ProblemDescription
+                  problem={problem}
+                  getDifficultyColor={getDifficultyColor}
+                />
+              )}
 
-          {activeLeftTab === "editorial" && <ProblemEditorial />}
+              {activeLeftTab === "editorial" && (
+                <ProblemEditorial problem={problem} />
+              )}
 
-          {activeLeftTab === "solutions" && (
-            <ProblemSolutions problem={problem} />
-          )}
+              {activeLeftTab === "solutions" && (
+                <ProblemSolutions problem={problem} />
+              )}
 
-          {activeLeftTab === "submissions" && (
-            <div>
-              <h2 className="text-xl font-bold mb-4">My Submissions</h2>
-              {/* Add your existing SubmissionHistory component here */}
-              <p className="text-gray-500">
-                Connect your SubmissionHistory component here.
-              </p>
-            </div>
-          )}
+              {activeLeftTab === "submissions" && (
+                <div>
+                  <h2 className="text-xl font-bold mb-4">My Submissions</h2>
+                  <div className="text-gray-500">
+                    <SubmissionHistory problemId={problemId} />
+                  </div>
+                </div>
+              )}
 
-          {activeLeftTab === "chatAI" && (
-            <div>
-              <h2 className="text-xl font-bold mb-4">Chat with AI</h2>
-              {/* Add your existing ChatAi component here */}
-              <p className="text-gray-500">
-                Connect your ChatAi component here.
-              </p>
-            </div>
+              {activeLeftTab === "chatAI" && (
+                <div className="prose max-w-none">
+                  <h2 className="text-xl font-bold mb-4">CHAT with AI</h2>
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                    <ChatAi problem={problem}></ChatAi>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
 
-      {/* Right panel */}
+      {/* Right Panel */}
       <div className="w-1/2 flex flex-col">
-        <div className="tabs tabs-bordered bg-base-200 px-4">
-          {[
-            { id: "code", label: "Code" },
-            { id: "testcase", label: "Testcase" },
-            { id: "result", label: "Result" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              className={`tab ${activeRightTab === tab.id ? "tab-active" : ""}`}
-              onClick={() => setActiveRightTab(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        <ProblemTabs
+          side="right"
+          activeTab={activeRightTab}
+          onTabChange={setActiveRightTab}
+        />
 
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col">
           {activeRightTab === "code" && (
-            <>
-              <div className="p-4 border-b border-base-300">
-                <LanguageSelector
-                  selectedLanguage={selectedLanguage}
-                  onLanguageChange={handleLanguageChange}
-                />
-              </div>
+            <div className="flex-1 flex flex-col">
+              <LanguageSelector
+                selectedLanguage={selectedLanguage}
+                onLanguageChange={handleLanguageChange}
+              />
 
-              <div className="flex-1 min-h-0">
-                <CodeEditor
-                  code={code}
-                  selectedLanguage={selectedLanguage}
-                  onChange={handleEditorChange}
-                  onMount={handleEditorDidMount}
-                />
-              </div>
+              <CodeEditor
+                code={code}
+                selectedLanguage={selectedLanguage}
+                getLanguageForMonaco={getLanguageForMonaco}
+                onChange={handleEditorChange}
+                onMount={handleEditorDidMount}
+              />
 
               <EditorActions
                 loading={loading}
@@ -247,20 +250,15 @@ const ProblemPage = () => {
                 onSubmit={handleSubmitCode}
                 onConsole={() => setActiveRightTab("testcase")}
               />
-            </>
+            </div>
           )}
 
           {activeRightTab === "testcase" && (
-            <div className="flex-1 p-4 overflow-y-auto">
-              <TestResults runResult={runResult} />
-            </div>
+            <TestResults runResult={runResult} />
           )}
 
           {activeRightTab === "result" && (
-            <div className="flex-1 p-4 overflow-y-auto">
-              <h3 className="font-semibold mb-4">Submission Result</h3>
-              <SubmissionResult submitResult={submitResult} />
-            </div>
+            <SubmissionResult submitResult={submitResult} />
           )}
         </div>
       </div>
