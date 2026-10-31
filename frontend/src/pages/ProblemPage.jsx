@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
 import axiosClient from "../utils/axiosClient";
-// import SubmissionHistory from "../components/SubmissionHistory";
+import SubmissionHistory from "../components/SubmissionHistory";
 // import ChatAi from "../components/ChatAi";
 
 import ProblemDescription from "../components/problem/ProblemDescription";
@@ -44,6 +44,7 @@ const ProblemPage = () => {
           `/problem/problemById/${problemId}`,
         );
         // console.log(response);
+
         const initialCode = response.data.startCode.find(
           (sc) => sc.language === langMap[selectedLanguage],
         ).initialCode;
