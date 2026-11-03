@@ -53,7 +53,8 @@ const login = async (req, res) => {
     //ab db me find krega email hi ya nhi
     const user = await User.findOne({ emailId });
 
-    const match = bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, user.password);
+    // console.log(match);
 
     if (!match) throw new Error("Invalid Credentials");
 

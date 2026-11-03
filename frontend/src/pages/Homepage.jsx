@@ -19,6 +19,7 @@ function Homepage() {
     const fetchProblems = async () => {
       try {
         const { data } = await axiosClient.get("/problem/getAllProblem");
+        console.log(data);
         setProblems(data);
       } catch (error) {
         console.error("Error fetching problems:", error);

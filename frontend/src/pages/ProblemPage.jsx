@@ -3,8 +3,6 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router";
 import axiosClient from "../utils/axiosClient";
 import SubmissionHistory from "../components/SubmissionHistory";
-// import ChatAi from "../components/ChatAi";
-
 import ProblemDescription from "../components/problem/ProblemDescription";
 import ProblemTabs from "../components/problem/ProblemTabs";
 import CodeEditor from "../components/problem/CodeEditor";
@@ -208,14 +206,14 @@ const ProblemPage = () => {
                 </div>
               )}
 
-              {activeLeftTab === "chatAI" && (
+              {/* {activeLeftTab === "chatAI" && (
                 <div className="prose max-w-none">
                   <h2 className="text-xl font-bold mb-4">CHAT with AI</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
                     <ChatAi problem={problem}></ChatAi>
                   </div>
                 </div>
-              )}
+              )} */}
             </>
           )}
         </div>

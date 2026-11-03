@@ -176,7 +176,7 @@ const getProblemById = async (req, res) => {
 const getAllProblem = async (req, res) => {
   try {
     const getProblem = await Problem.find({}).select(
-      "_id title difficulty tag",
+      "_id title difficulty tags",
     );
 
     if (getProblem.length == 0)
