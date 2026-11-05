@@ -12,7 +12,7 @@ import TestResults from "../components/problem/TestResults";
 import SubmissionResult from "../components/problem/SubmissionResult";
 import ProblemEditorial from "../components/problem/ProblemEditorial";
 import ProblemSolutions from "../components/problem/ProblemSolutions";
-
+import ChatAi from "../components/ChatAi";
 const langMap = {
   cpp: "c++",
   java: "java",
@@ -206,14 +206,14 @@ const ProblemPage = () => {
                 </div>
               )}
 
-              {/* {activeLeftTab === "chatAI" && (
+              {activeLeftTab === "chatAI" && (
                 <div className="prose max-w-none">
                   <h2 className="text-xl font-bold mb-4">CHAT with AI</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
                     <ChatAi problem={problem}></ChatAi>
                   </div>
                 </div>
-              )} */}
+              )}
             </>
           )}
         </div>
