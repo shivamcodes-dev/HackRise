@@ -39,11 +39,3 @@ const InitalizeConnection = async () => {
 };
 
 InitalizeConnection();
-
-// main()
-//   .then(async () => {
-//     app.listen(process.env.PORT, () => {
-//       console.log("Server listening at port Number: " + process.env.PORT);
-//     });
-//   })
-//   .catch((err) => console.log("error occure: " + err));
